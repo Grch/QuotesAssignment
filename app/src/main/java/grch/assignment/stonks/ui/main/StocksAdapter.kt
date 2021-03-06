@@ -3,8 +3,10 @@ package grch.assignment.stonks.ui.main
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import grch.assignment.stonks.data.model.Product
 import grch.assignment.stonks.data.model.SocketResponse.Ticker
 import grch.assignment.stonks.databinding.QuoteItemBinding
+import grch.assignment.stonks.utils.QuotesConstants
 
 class StocksAdapter(private var list: ArrayList<Ticker.Tick>) :
     RecyclerView.Adapter<StocksAdapter.ViewHolder>() {
@@ -28,7 +30,7 @@ class StocksAdapter(private var list: ArrayList<Ticker.Tick>) :
 
     fun updateStockData(tick: Ticker.Tick) {
         list.forEachIndexed { index, element ->
-            if (element.name == tick.name) {
+            if (element.product == tick.product) {
                 list[index].ask = tick.ask
                 list[index].bid = tick.bid
                 list[index].spread = tick.spread
@@ -37,14 +39,37 @@ class StocksAdapter(private var list: ArrayList<Ticker.Tick>) :
         }
     }
 
-    fun addProduct(tick: Ticker.Tick) {
-        list.add(tick)
+    fun addProduct(product: Product) {
+        if (!containsProduct(product)) {
+            list.add(QuotesConstants.generateInitialPair(product))
+            notifyDataSetChanged()
+        }
+    }
+
+    fun removeProduct(product: Product) {
+        val it = list.iterator()
+
+        while (it.hasNext()) {
+            val value = it.next()
+            if (value.product.name == product.name){
+                it.remove()
+            }
+        }
         notifyDataSetChanged()
     }
 
-    class ViewHolder(val binding: QuoteItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    private fun containsProduct(product: Product): Boolean {
+        for (item in list) {
+            if (item.product.name == product.name) {
+                return true
+            }
+        }
+        return false
+    }
+
+    class ViewHolder(private val binding: QuoteItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(tick: Ticker.Tick) {
-            binding.quoteName.text = tick.name.displayCode
+            binding.quoteName.text = tick.product.displayCode
             binding.quoteBid.text = tick.bid
             binding.quoteAsk.text = tick.ask
             binding.quoteSpread.text = tick.spread

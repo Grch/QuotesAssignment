@@ -3,6 +3,7 @@ package grch.assignment.stonks.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import grch.assignment.stonks.data.model.SocketResponse
 import grch.assignment.stonks.data.repository.StocksRepository
@@ -22,21 +23,28 @@ class MainViewModel @Inject constructor(
         super.onCleared()
         disposables.dispose()
     }
+    private var subscriptionsLiveData: MutableLiveData<String> = MutableLiveData()
 
     private val _state = MutableLiveData<SocketResponse.Ticker.Tick>()
     val state: LiveData<SocketResponse.Ticker.Tick> = _state
 
-    fun subscribeStocks(stocks: List<String>) {
+    init {
+        observeStocks()
+    }
+    fun subscribeStocks(stock: String) {
+        repository.subscribeStocks(stock)
+    }
+
+    fun unsubscribeStocks(stock: String) {
+        repository.unsubscribeStocks(stock)
+    }
+
+    fun observeStocks() {
         disposables.add(repository.observeTicker()
-            .subscribeOn(Schedulers.io())
             .subscribe({
                 _state.postValue(it)
             }, {
                 Timber.e("Socket viewModel error")
             }))
-    }
-
-    fun observe() {
-
     }
 }

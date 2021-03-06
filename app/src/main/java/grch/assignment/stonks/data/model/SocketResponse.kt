@@ -15,7 +15,7 @@ sealed class SocketResponse {
         @JsonClass(generateAdapter = true)
         data class Tick(
             @Json(name = "s")
-            val name: Product,
+            val product: Product,
             @Json(name = "b")
             var bid: String,
             @Json(name = "a")

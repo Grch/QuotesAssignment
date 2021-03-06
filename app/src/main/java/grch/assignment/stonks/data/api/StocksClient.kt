@@ -15,20 +15,16 @@ class StocksClient @Inject constructor(
     okHttpClient: OkHttpClient,
     request: Request,
     val moshi: Moshi
-) : StonksApi, WebSocketListener() {
-    private val webSocket: WebSocket
+) : WebSocketListener(), StonksApi {
+    private val webSocket: WebSocket = okHttpClient.newWebSocket(request, this)
     lateinit var publishProcessor: PublishProcessor<SocketResponse>
     private val socketConnection: PublishProcessor<Boolean> = PublishProcessor.create()
-
-    init {
-        webSocket = okHttpClient.newWebSocket(request, this)
-    }
 
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
         super.onOpen(webSocket, response)
         publishProcessor = PublishProcessor.create()
-        Timber.d("GRCH Socket openedd")
+        Timber.d("GRCH Socket opened")
         socketConnection.onNext(true)
     }
 
@@ -39,7 +35,7 @@ class StocksClient @Inject constructor(
 
     override fun onMessage(webSocket: WebSocket, text: String) {
         super.onMessage(webSocket, text)
-        Timber.d("GRCH socket msg: " + text)
+        Timber.d("GRCH socket msg: %s", text)
         val jsonAdapter: JsonAdapter<SocketResponse.Ticker> =
             moshi.adapter(SocketResponse.Ticker::class.java)
         val ticker = try {
@@ -53,18 +49,14 @@ class StocksClient @Inject constructor(
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         super.onFailure(webSocket, t, response)
         Timber.e("GRCH Socket FAIL: %s", t.localizedMessage)
-//        socketConnection.onNext(false)
     }
 
     override fun subscribeStocks(stock: String) {
         webSocket.send("SUBSCRIBE: $stock")
     }
 
-    override fun unsubscribeStocks(stocks: List<String>) {
-        publishProcessor = PublishProcessor.create()
-        stocks.forEach {
-            webSocket.send("UNSUBSCRIBE: $it")
-        }
+    override fun unsubscribeStocks(stock: String) {
+        webSocket.send("UNSUBSCRIBE: $stock")
     }
 
     fun observeTicker(): Flowable<SocketResponse> = publishProcessor.onBackpressureLatest()

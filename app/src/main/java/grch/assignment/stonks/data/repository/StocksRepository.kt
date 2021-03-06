@@ -1,17 +1,17 @@
 package grch.assignment.stonks.data.repository
 
 
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.switchMap
 import grch.assignment.stonks.data.api.StocksClient
-import grch.assignment.stonks.data.model.Product
 import grch.assignment.stonks.data.model.SocketResponse
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.BehaviorProcessor
 import timber.log.Timber
-import java.util.Arrays.asList
 import javax.inject.Inject
 
 class StocksRepository @Inject constructor(
-    val stocksClient: StocksClient
+    private val stocksClient: StocksClient
 ) {
 
     val disposables = CompositeDisposable()
@@ -31,12 +31,16 @@ class StocksRepository @Inject constructor(
                     tickerProcessor.onNext(it)
                 }
             })
+
     }
 
-    fun subscribeStocks(product: List<String>) {
-        product.forEach {
-            stocksClient.subscribeStocks(it)
-        }
+    fun subscribeStocks(stock: String) {
+        stocksClient.subscribeStocks(stock)
+    }
+
+    fun unsubscribeStocks(stock: String) {
+        stocksClient.unsubscribeStocks(stock)
+
     }
 
     fun observeTicker() = tickerProcessor

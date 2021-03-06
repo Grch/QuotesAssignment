@@ -8,6 +8,6 @@ import okhttp3.WebSocket
 interface StonksApi {
 //    fun observeWebSocketEvent(): Flowable<>
     fun subscribeStocks(stock: String)
-    fun unsubscribeStocks(stocks: List<String>)
+    fun unsubscribeStocks(stock: String)
 //    fun observeTicker(): Flowable<Ticker>
 }

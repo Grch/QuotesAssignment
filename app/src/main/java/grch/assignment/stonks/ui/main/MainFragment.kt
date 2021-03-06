@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import grch.assignment.stonks.R
 import grch.assignment.stonks.data.model.Product
 import grch.assignment.stonks.databinding.MainFragmentBinding
-import grch.assignment.stonks.utils.QuotesConstants
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -39,9 +38,8 @@ class MainFragment : Fragment(), OnSharedPreferenceChangeListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = MainFragmentBinding.bind(view)
-        setupPrefs()
         initRecyclerView()
-        initViewModel()
+        setupPrefs()
         setupObserver()
 
     }
@@ -49,12 +47,20 @@ class MainFragment : Fragment(), OnSharedPreferenceChangeListener {
     private fun setupPrefs() {
         PreferenceManager.setDefaultValues(context, R.xml.preference, false)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        Product.values().forEach { product ->
+            val preferenceValue = sharedPreferences.getBoolean(product.code, false)
+            if (preferenceValue) {
+                addProduct(product)
+            } else {
+                removeProduct(product)
+            }
+        }
     }
 
     private fun setupObserver() {
         viewModel.state.observe(viewLifecycleOwner, Observer { tick ->
             stocksAdapter.updateStockData(tick)
-            Timber.d("Socket Fragment ticker $tick position ${tick.name}")
+            Timber.d("socket Fragment ticker $tick")
         })
     }
 
@@ -64,15 +70,16 @@ class MainFragment : Fragment(), OnSharedPreferenceChangeListener {
             layoutManager = LinearLayoutManager(context)
             adapter = stocksAdapter
         }
-        addProduct(Product.BTCUSD)
     }
 
     private fun addProduct(product: Product) {
-        stocksAdapter.addProduct(QuotesConstants.generateInitialPair(product))
+        stocksAdapter.addProduct(product)
+        viewModel.subscribeStocks(product.name)
     }
 
-    private fun initViewModel() {
-        viewModel.subscribeStocks(listOf("SUBSCRIBE: BTCUSD"))
+    private fun removeProduct(product: Product) {
+        stocksAdapter.removeProduct(product)
+        viewModel.unsubscribeStocks(product.name)
     }
 
     override fun onStart() {
@@ -86,7 +93,15 @@ class MainFragment : Fragment(), OnSharedPreferenceChangeListener {
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        Timber.d("SharepPrefs $key")
+        val prefReference = sharedPreferences?.getBoolean(key, false)
+        Product.values().forEach { product ->
+            if (product.name == key.orEmpty()) {
+                when (prefReference) {
+                    true -> addProduct(product)
+                    false -> removeProduct(product)
+                }
+            }
+        }
     }
 
 }
