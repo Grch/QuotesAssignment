@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="BTCUSD"
+        android:title="BTC/USD" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="EURUSD"
+        android:title="EUR/USD" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="EURGBP"
+        android:title="EUR/GBP" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="USDJPY"
+        android:title="USD/JPY" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="GBPUSD"
+        android:title="GBP/USD" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="USDCHF"
+        android:title="USD/CHF" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="USDCAD"
+        android:title="USD/CAD" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="AUDUSD"
+        android:title="AUD/USD" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="EURJPY"
+        android:title="EUR/JPY" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="EURCHF"
+        android:title="EUR/CHF" />
+</PreferenceScreen>
