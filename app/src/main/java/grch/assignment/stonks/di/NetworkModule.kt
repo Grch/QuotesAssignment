@@ -1,10 +1,7 @@
 package grch.assignment.stonks.di
 
-import android.app.Application
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.tinder.scarlet.Lifecycle
-import com.tinder.scarlet.lifecycle.android.AndroidLifecycle
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.security.cert.X509Certificate
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
@@ -47,7 +45,10 @@ class NetworkModule {
 
         return OkHttpClient.Builder()
             .sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
-            .hostnameVerifier { _, _ -> true }.build()
+            .hostnameVerifier { _, _ -> true }
+            .retryOnConnectionFailure(true)
+            .connectTimeout(2, TimeUnit.SECONDS)
+            .build()
     }
 
     @Singleton
@@ -66,12 +67,6 @@ class NetworkModule {
     fun providesMoshi() = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
-
-    @Provides
-    @Singleton
-    fun provideLifecycle(application: Application): Lifecycle {
-        return AndroidLifecycle.ofApplicationForeground(application)
-    }
 
     @Singleton
     @Provides

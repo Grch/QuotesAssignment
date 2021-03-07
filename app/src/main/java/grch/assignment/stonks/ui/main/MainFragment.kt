@@ -3,19 +3,20 @@ package grch.assignment.stonks.ui.main
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import grch.assignment.stonks.R
 import grch.assignment.stonks.data.model.Product
 import grch.assignment.stonks.databinding.MainFragmentBinding
-import timber.log.Timber
+import grch.assignment.stonks.utils.AppBackgroundListener
 
 @AndroidEntryPoint
 class MainFragment : Fragment(), OnSharedPreferenceChangeListener {
@@ -42,6 +43,11 @@ class MainFragment : Fragment(), OnSharedPreferenceChangeListener {
         setupPrefs()
         setupObserver()
 
+        setupLifecycleObserver()
+    }
+
+    private fun setupLifecycleObserver() {
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppBackgroundListener())
     }
 
     private fun setupPrefs() {
@@ -60,7 +66,6 @@ class MainFragment : Fragment(), OnSharedPreferenceChangeListener {
     private fun setupObserver() {
         viewModel.state.observe(viewLifecycleOwner, Observer { tick ->
             stocksAdapter.updateStockData(tick)
-            Timber.d("socket Fragment ticker $tick")
         })
     }
 

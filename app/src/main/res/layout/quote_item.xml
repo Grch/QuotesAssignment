@@ -7,18 +7,19 @@
 
     <TextView
         android:id="@+id/quote_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/quote_bid"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="10dp"
         tools:text="BTC / USD" />
 
     <TextView
         android:id="@+id/quote_bid"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,8 +32,7 @@
         android:id="@+id/quote_separator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="/"
+        android:text="@string/separator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/quote_ask"
         app:layout_constraintStart_toEndOf="@id/quote_bid"
@@ -40,7 +40,7 @@
 
     <TextView
         android:id="@+id/quote_ask"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -51,7 +51,7 @@
 
     <TextView
         android:id="@+id/quote_spread"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
