@@ -1,14 +1,12 @@
-package grch.assignment.stonks
+package grch.assignment.stonks.ui.main
 
 import android.content.Intent
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.preference.PreferenceManager
+import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
-import grch.assignment.stonks.ui.main.MainFragment
+import grch.assignment.stonks.R
 import grch.assignment.stonks.ui.settings.SettingsActivity
 
 @AndroidEntryPoint

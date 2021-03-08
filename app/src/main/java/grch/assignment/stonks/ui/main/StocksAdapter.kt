@@ -51,7 +51,7 @@ class StocksAdapter(private var list: ArrayList<Ticker.Tick>) :
 
         while (it.hasNext()) {
             val value = it.next()
-            if (value.product.name == product.name){
+            if (value.product.name == product.name) {
                 it.remove()
             }
         }
@@ -67,7 +67,8 @@ class StocksAdapter(private var list: ArrayList<Ticker.Tick>) :
         return false
     }
 
-    class ViewHolder(private val binding: QuoteItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: QuoteItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(tick: Ticker.Tick) {
             binding.quoteName.text = tick.product.displayCode
             binding.quoteBid.text = tick.bid

@@ -6,21 +6,19 @@ import grch.assignment.stonks.data.model.SocketResponse
 import io.reactivex.Flowable
 import io.reactivex.processors.PublishProcessor
 import okhttp3.*
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class StocksClient @Inject constructor(
-    val okHttpClient: OkHttpClient,
-    val request: Request,
+    private val okHttpClient: OkHttpClient,
+    private val request: Request,
     val moshi: Moshi
-) : WebSocketListener(), StonksApi {
+) : WebSocketListener(), StocksApi {
     private var webSocket: WebSocket
     private var publishProcessor: PublishProcessor<SocketResponse>
     private val socketConnection: PublishProcessor<Boolean> = PublishProcessor.create()
-    private var isConnected = false
-    private var backupList = mutableListOf<String>()
+    private var backupSubscriptionList = mutableListOf<String>()
 
     init {
         webSocket = okHttpClient.newWebSocket(request, this)
@@ -30,9 +28,8 @@ class StocksClient @Inject constructor(
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
         super.onOpen(webSocket, response)
-        isConnected = true
         socketConnection.onNext(true)
-        backupList.forEach{
+        backupSubscriptionList.forEach {
             subscribeStocks(it)
         }
     }
@@ -44,7 +41,6 @@ class StocksClient @Inject constructor(
 
     override fun onMessage(webSocket: WebSocket, text: String) {
         super.onMessage(webSocket, text)
-        Timber.d("GRCH socket msg: %s", text)
         val jsonAdapter: JsonAdapter<SocketResponse.Ticker> =
             moshi.adapter(SocketResponse.Ticker::class.java)
         val ticker = try {
@@ -57,33 +53,29 @@ class StocksClient @Inject constructor(
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         super.onFailure(webSocket, t, response)
-        Timber.e("GRCH Socket FAIL: %s", t.localizedMessage)
         socketConnection.onNext(false)
-        isConnected = false
         Thread.sleep(4000)
         reconnect()
     }
 
     override fun subscribeStocks(stock: String) {
-        Timber.d("Socket SUBSCRIBE : $stock" )
         webSocket.send("SUBSCRIBE: $stock")
-        if (!backupList.contains(stock)) {
-            backupList.add(stock)
+        if (!backupSubscriptionList.contains(stock)) {
+            backupSubscriptionList.add(stock)
         }
     }
 
     override fun unsubscribeStocks(stock: String) {
         webSocket.send("UNSUBSCRIBE: $stock")
-        backupList.remove(stock)
+        backupSubscriptionList.remove(stock)
     }
 
     override fun reconnect() {
-        Timber.d("Socket try reconnect")
         webSocket.close(1000, "No reason!")
         webSocket = okHttpClient.newWebSocket(request, this)
     }
 
-    fun observeTicker(): Flowable<SocketResponse> = publishProcessor.onBackpressureLatest()
+    override fun observeTicker(): Flowable<SocketResponse> = publishProcessor.onBackpressureLatest()
 
     fun observeSocketConnection(): Flowable<Boolean> = socketConnection
 }

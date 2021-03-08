@@ -42,7 +42,6 @@ class MainFragment : Fragment(), OnSharedPreferenceChangeListener {
         initRecyclerView()
         setupPrefs()
         setupObserver()
-
         setupLifecycleObserver()
     }
 
