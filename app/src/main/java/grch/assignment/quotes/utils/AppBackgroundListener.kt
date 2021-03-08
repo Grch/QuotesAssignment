@@ -1,4 +1,4 @@
-package grch.assignment.stonks.utils
+package grch.assignment.quotes.utils
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver

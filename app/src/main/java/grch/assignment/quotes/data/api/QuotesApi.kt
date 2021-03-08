@@ -1,11 +1,10 @@
-package grch.assignment.stonks.data.api
+package grch.assignment.quotes.data.api
 
-import grch.assignment.stonks.data.model.SocketResponse
+import grch.assignment.quotes.data.model.SocketResponse
 import io.reactivex.Flowable
 
-interface StocksApi {
+interface QuotesApi {
     fun subscribeStocks(stock: String)
     fun unsubscribeStocks(stock: String)
-    fun reconnect()
     fun observeTicker(): Flowable<SocketResponse>
 }

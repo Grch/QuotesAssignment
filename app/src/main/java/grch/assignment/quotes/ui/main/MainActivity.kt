@@ -1,4 +1,4 @@
-package grch.assignment.stonks.ui.main
+package grch.assignment.quotes.ui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,8 +6,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
-import grch.assignment.stonks.R
-import grch.assignment.stonks.ui.settings.SettingsActivity
+import grch.assignment.quotes.R
+import grch.assignment.quotes.ui.settings.SettingsActivity
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

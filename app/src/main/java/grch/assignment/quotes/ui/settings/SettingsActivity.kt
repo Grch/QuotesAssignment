@@ -1,9 +1,8 @@
-package grch.assignment.stonks.ui.settings
+package grch.assignment.quotes.ui.settings
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import grch.assignment.stonks.R
-import grch.assignment.stonks.ui.main.MainFragment
+import grch.assignment.quotes.R
 
 class SettingsActivity : AppCompatActivity() {
 

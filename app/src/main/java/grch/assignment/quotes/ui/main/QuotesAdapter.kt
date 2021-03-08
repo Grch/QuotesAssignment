@@ -1,15 +1,15 @@
-package grch.assignment.stonks.ui.main
+package grch.assignment.quotes.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import grch.assignment.stonks.data.model.Product
-import grch.assignment.stonks.data.model.SocketResponse.Ticker
-import grch.assignment.stonks.databinding.QuoteItemBinding
-import grch.assignment.stonks.utils.QuotesConstants
+import grch.assignment.quotes.data.model.Product
+import grch.assignment.quotes.data.model.SocketResponse.Ticker
+import grch.assignment.quotes.databinding.QuoteItemBinding
+import grch.assignment.quotes.utils.QuotesConstants
 
-class StocksAdapter(private var list: ArrayList<Ticker.Tick>) :
-    RecyclerView.Adapter<StocksAdapter.ViewHolder>() {
+class QuotesAdapter(private var list: ArrayList<Ticker.Tick>) :
+    RecyclerView.Adapter<QuotesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = QuoteItemBinding.inflate(
@@ -28,7 +28,7 @@ class StocksAdapter(private var list: ArrayList<Ticker.Tick>) :
         return list.size
     }
 
-    fun updateStockData(tick: Ticker.Tick) {
+    fun updateQuoteData(tick: Ticker.Tick) {
         list.forEachIndexed { index, element ->
             if (element.product == tick.product) {
                 list[index].ask = tick.ask

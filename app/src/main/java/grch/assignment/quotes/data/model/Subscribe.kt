@@ -1,4 +1,4 @@
-package grch.assignment.stonks.data.model
+package grch.assignment.quotes.data.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

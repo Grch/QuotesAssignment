@@ -1,7 +1,7 @@
-package grch.assignment.stonks.utils
+package grch.assignment.quotes.utils
 
-import grch.assignment.stonks.data.model.Product
-import grch.assignment.stonks.data.model.SocketResponse.Ticker.Tick
+import grch.assignment.quotes.data.model.Product
+import grch.assignment.quotes.data.model.SocketResponse.Ticker.Tick
 
 class QuotesConstants {
     companion object {

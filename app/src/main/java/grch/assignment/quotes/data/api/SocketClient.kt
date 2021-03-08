@@ -1,8 +1,8 @@
-package grch.assignment.stonks.data.api
+package grch.assignment.quotes.data.api
 
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
-import grch.assignment.stonks.data.model.SocketResponse
+import grch.assignment.quotes.data.model.SocketResponse
 import io.reactivex.Flowable
 import io.reactivex.processors.PublishProcessor
 import okhttp3.*
@@ -10,11 +10,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StocksClient @Inject constructor(
+class SocketClient @Inject constructor(
     private val okHttpClient: OkHttpClient,
     private val request: Request,
     val moshi: Moshi
-) : WebSocketListener(), StocksApi {
+) : WebSocketListener(), QuotesApi {
     private var webSocket: WebSocket
     private var publishProcessor: PublishProcessor<SocketResponse>
     private val socketConnection: PublishProcessor<Boolean> = PublishProcessor.create()
@@ -70,7 +70,7 @@ class StocksClient @Inject constructor(
         backupSubscriptionList.remove(stock)
     }
 
-    override fun reconnect() {
+    private fun reconnect() {
         webSocket.close(1000, "No reason!")
         webSocket = okHttpClient.newWebSocket(request, this)
     }

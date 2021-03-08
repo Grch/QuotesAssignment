@@ -1,8 +1,7 @@
-package grch.assignment.stonks
-
-import org.junit.Test
+package grch.assignment.quotes
 
 import org.junit.Assert.*
+import org.junit.Test
 
 /**
  * Example local unit test, which will execute on the development machine (host).

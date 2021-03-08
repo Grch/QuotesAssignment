@@ -1,4 +1,4 @@
-package grch.assignment.stonks.ui.main
+package grch.assignment.quotes.ui.main
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
@@ -13,16 +13,16 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import grch.assignment.stonks.R
-import grch.assignment.stonks.data.model.Product
-import grch.assignment.stonks.databinding.MainFragmentBinding
-import grch.assignment.stonks.utils.AppBackgroundListener
+import grch.assignment.quotes.R
+import grch.assignment.quotes.data.model.Product
+import grch.assignment.quotes.databinding.MainFragmentBinding
+import grch.assignment.quotes.utils.AppBackgroundListener
 
 @AndroidEntryPoint
 class MainFragment : Fragment(), OnSharedPreferenceChangeListener {
 
     private lateinit var binding: MainFragmentBinding
-    private lateinit var stocksAdapter: StocksAdapter
+    private lateinit var quotesAdapter: QuotesAdapter
     private lateinit var sharedPreferences: SharedPreferences
 
     companion object {
@@ -63,27 +63,27 @@ class MainFragment : Fragment(), OnSharedPreferenceChangeListener {
     }
 
     private fun setupObserver() {
-        viewModel.state.observe(viewLifecycleOwner, Observer { tick ->
-            stocksAdapter.updateStockData(tick)
+        viewModel.allQuotes.observe(viewLifecycleOwner, Observer { tick ->
+            quotesAdapter.updateQuoteData(tick)
         })
     }
 
     private fun initRecyclerView() {
-        stocksAdapter = StocksAdapter(ArrayList())
+        quotesAdapter = QuotesAdapter(ArrayList())
         binding.quotesList.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = stocksAdapter
+            adapter = quotesAdapter
         }
     }
 
     private fun addProduct(product: Product) {
-        stocksAdapter.addProduct(product)
-        viewModel.subscribeStocks(product.name)
+        quotesAdapter.addProduct(product)
+        viewModel.subscribeProduct(product.name)
     }
 
     private fun removeProduct(product: Product) {
-        stocksAdapter.removeProduct(product)
-        viewModel.unsubscribeStocks(product.name)
+        quotesAdapter.removeProduct(product)
+        viewModel.unsubscribeProduct(product.name)
     }
 
     override fun onStart() {

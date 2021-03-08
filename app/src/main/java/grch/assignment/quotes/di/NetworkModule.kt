@@ -1,4 +1,4 @@
-package grch.assignment.stonks.di
+package grch.assignment.quotes.di
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -6,8 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import grch.assignment.stonks.data.api.StocksClient
-import grch.assignment.stonks.data.repository.StocksRepository
+import grch.assignment.quotes.data.api.SocketClient
+import grch.assignment.quotes.data.repository.QuotesRepository
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -74,9 +74,9 @@ class NetworkModule {
         okHttpClient: OkHttpClient,
         request: Request,
         moshi: Moshi
-    ) = StocksClient(okHttpClient, request, moshi)
+    ) = SocketClient(okHttpClient, request, moshi)
 
     @Singleton
     @Provides
-    fun provideStocksRepository(stocksClient: StocksClient) = StocksRepository(stocksClient)
+    fun provideStocksRepository(socketClient: SocketClient) = QuotesRepository(socketClient)
 }

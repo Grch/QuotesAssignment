@@ -1,23 +1,23 @@
-package grch.assignment.stonks.data.repository
+package grch.assignment.quotes.data.repository
 
-import grch.assignment.stonks.data.api.StocksClient
-import grch.assignment.stonks.data.model.SocketResponse
+import grch.assignment.quotes.data.api.SocketClient
+import grch.assignment.quotes.data.model.SocketResponse
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.BehaviorProcessor
 import javax.inject.Inject
 
-class StocksRepository @Inject constructor(
-    private val stocksClient: StocksClient
+class QuotesRepository @Inject constructor(
+    private val socketClient: SocketClient
 ) {
 
-    val disposables = CompositeDisposable()
+    private val disposables = CompositeDisposable()
 
     private val tickerProcessor = BehaviorProcessor.create<SocketResponse.Ticker.Tick>()
 
     init {
-        disposables.add(stocksClient.observeSocketConnection()
+        disposables.add(socketClient.observeSocketConnection()
             .filter { it }
-            .flatMap { stocksClient.observeTicker() }
+            .flatMap { socketClient.observeTicker() }
             .filter { it is SocketResponse.Ticker }
             .subscribe { response ->
                 val ticker = response as SocketResponse.Ticker
@@ -27,13 +27,12 @@ class StocksRepository @Inject constructor(
             })
     }
 
-    fun subscribeStocks(stock: String) {
-        stocksClient.subscribeStocks(stock)
+    fun subscribeProduct(stock: String) {
+        socketClient.subscribeStocks(stock)
     }
 
-    fun unsubscribeStocks(stock: String) {
-        stocksClient.unsubscribeStocks(stock)
-
+    fun unsubscribeProduct(stock: String) {
+        socketClient.unsubscribeStocks(stock)
     }
 
     fun observeTicker() = tickerProcessor.distinctUntilChanged()
