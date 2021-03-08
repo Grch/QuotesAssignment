@@ -4,6 +4,7 @@ import grch.assignment.quotes.data.api.SocketClient
 import grch.assignment.quotes.data.model.SocketResponse
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.BehaviorProcessor
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class QuotesRepository @Inject constructor(
@@ -17,6 +18,7 @@ class QuotesRepository @Inject constructor(
     init {
         disposables.add(socketClient.observeSocketConnection()
             .filter { it }
+            .subscribeOn(Schedulers.io())
             .flatMap { socketClient.observeTicker() }
             .filter { it is SocketResponse.Ticker }
             .subscribe { response ->
